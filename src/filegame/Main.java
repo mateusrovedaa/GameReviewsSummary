@@ -107,6 +107,6 @@ public class Main {
             }
         }
 
-        System.out.println("O ano com mais jogos lançados do genêro 'Action' é: " + actionGenre + " (" + maxGenre + " jogos)");
+        System.out.println("The year with the most games released under the 'Action' genre is: " + actionGenre + " (" + maxGenre + " games)");
     }
 }
