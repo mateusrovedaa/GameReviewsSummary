@@ -1,5 +1,6 @@
 package filegame;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -15,6 +16,7 @@ public class Main {
         private String worstTitle;
         private double bestScore;
         private double worstScore;
+        public ArrayList<Double> scores = new ArrayList<>();
 
         public Info(int reviews, double totalScore, int countMediocre, String bestTitle, String worstTitle, double bestScore, double worstScore) {
             this.reviews = reviews;
@@ -26,10 +28,21 @@ public class Main {
             this.worstScore = worstScore;
         }
 
+        public double patternDeviation() {
+            double patternDeviation;
+            double sum = 0;
+            for (Double score : scores) {
+                patternDeviation = score - (totalScore / (double) reviews);
+                sum += Math.pow(patternDeviation, 2);
+            }
+            return Math.sqrt(sum / reviews);
+        }
+
         @Override
         public String toString() {
             return "Reviews: " + reviews + ",\nMediocre Reviews %: " + ((double) countMediocre / reviews * 100)
                     + ",\nAverage Score: " + (totalScore / (double) reviews)
+                    + ",\nPattern Deviation Scores: " + patternDeviation()
                     + ",\nBest Scored Title: " + bestScore + "p., " + bestTitle
                     + ",\nWorst Scored Title: " + worstScore + "p., " + worstTitle + "\n";
         }
@@ -40,8 +53,7 @@ public class Main {
 
         Map<String, Info> map = new TreeMap<String, Info>();
         Map<String, Integer> yearAction = new HashMap<>();
-        
-        
+
         SimpleReader file = new SimpleReader("game-reviews.csv");
 
         String line = file.readLine();
@@ -83,11 +95,12 @@ public class Main {
                     Integer genreCount = yearAction.get(year);
                     if (genreCount == null) {
                         genreCount = 0;
-                    } 
+                    }
                     yearAction.put(year, ++genreCount);
                 }
             }
-
+            
+            i.scores.add(score);
             line = file.readLine();
         }
 
